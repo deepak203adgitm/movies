@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import Header from "./components/Header/Header";
 import Movies from "./components/Movies/Movies";
+import Pagenation from "./components/Pagination/Pagenation";
 import axios from "axios";
 import { API_KEY, API_URL, IMAGE_URL } from "./API/secret.js";
 
 class App extends Component {
-  state = {};
   state = {
     moviesData: [],
-    currentMovie: "batman",
+    currentMovie: "avengers",
+    pages: [],
+    currPage: 1,
   };
 
   async componentDidMount() {
@@ -19,31 +21,107 @@ class App extends Component {
     let data = await axios.get(API_URL + "/search/movie", {
       params: { api_key: API_KEY, page: 1, query: this.state.currentMovie },
     });
-    let moviesData = data.data.results.slice(0,10);
+    console.log(data);
+    let moviesData = data.data.results.slice(0, 10);
+    let pagesCount = data.data.total_pages; //3
+    console.log(moviesData);
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+      pages.push(i);
+    }
     this.setState({
-      moviesData:moviesData
-    })
+      moviesData: moviesData,
+      pages: pages,
+    });
   }
 
-
-  setMovies= async(newMovieName) =>{
+  setMovies = async (newMovieName) => {
     let data = await axios.get(API_URL + "/search/movie", {
       params: { api_key: API_KEY, page: 1, query: newMovieName },
     });
-
-    let moviesData = data.data.results.slice(0,10);
+    let moviesData = data.data.results.slice(0, 10);
+    let pagesCount = data.data.total_pages; //3
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+      pages.push(i);
+    }
     this.setState({
-      moviesData:moviesData,
-      currentMovie: newMovieName
-    })
+      moviesData: moviesData,
+      currentMovie: newMovieName,
+      pages: pages,
+    });
+  };
 
-  }
+  nextPage = async () => {
+    let data = await axios.get(API_URL + "/search/movie", {
+      params: {
+        api_key: API_KEY,
+        page: this.state.currPage + 1,
+        query: this.state.currentMovie,
+      },
+    });
+    console.log(data);
+    let moviesData = data.data.results.slice(0, 10);
+    this.setState({
+      moviesData: moviesData,
+      currPage: this.state.currPage + 1,
+    });
+  };
+
+  previousPage = async () => {
+    let data = await axios.get(API_URL + "/search/movie", {
+      params: {
+        api_key: API_KEY,
+        page: this.state.currPage - 1,
+        query: this.state.currentMovie,
+      },
+    });
+    console.log(data);
+    let moviesData = data.data.results.slice(0, 10);
+    this.setState({
+      moviesData: moviesData,
+      currPage: this.state.currPage - 1,
+    });
+  };
+
+  setPage = async (pageCount) => {
+    let data = await axios.get(API_URL + "/search/movie", {
+      params: {
+        api_key: API_KEY,
+        page: pageCount,
+        query: this.state.currentMovie,
+      },
+    });
+    console.log(data);
+    let moviesData = data.data.results.slice(0, 10);
+    this.setState({
+      moviesData: moviesData,
+      currPage: pageCount,
+    });
+  };
+
+
   render() {
     //return <div className="App">Hello From App</div>;
     return (
       <div className="App">
         <Header  setMovies ={this.setMovies}></Header>
         <Movies movies={this.state.moviesData}></Movies>
+        {this.state.moviesData.length ? (
+                <React.Fragment>
+                  <Movies movies={this.state.moviesData}></Movies>
+                  <Pagenation
+                    pages={this.state.pages}
+                    currPage={this.state.currPage}
+                    nextPage={this.nextPage}
+                    previousPage={this.previousPage}
+                    setPage={this.setPage}
+                  ></Pagenation>
+                </React.Fragment>
+              ) : (
+                <h1>Oops No Movies Found !</h1>
+              )}
+     
       </div>
     );
   }
