@@ -8,7 +8,7 @@ class App extends Component {
   state = {};
   state = {
     moviesData: [],
-    currentMovie: "avengers",
+    currentMovie: "batman",
   };
 
   async componentDidMount() {
@@ -19,17 +19,30 @@ class App extends Component {
     let data = await axios.get(API_URL + "/search/movie", {
       params: { api_key: API_KEY, page: 1, query: this.state.currentMovie },
     });
-    let moviesData = data.data.results;
+    let moviesData = data.data.results.slice(0,10);
     this.setState({
       moviesData:moviesData
     })
   }
 
+
+  setMovies= async(newMovieName) =>{
+    let data = await axios.get(API_URL + "/search/movie", {
+      params: { api_key: API_KEY, page: 1, query: newMovieName },
+    });
+
+    let moviesData = data.data.results.slice(0,10);
+    this.setState({
+      moviesData:moviesData,
+      currentMovie: newMovieName
+    })
+
+  }
   render() {
     //return <div className="App">Hello From App</div>;
     return (
       <div className="App">
-        <Header></Header>
+        <Header  setMovies ={this.setMovies}></Header>
         <Movies movies={this.state.moviesData}></Movies>
       </div>
     );
