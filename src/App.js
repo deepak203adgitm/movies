@@ -3,7 +3,12 @@ import Header from "./components/Header/Header";
 import Movies from "./components/Movies/Movies";
 import Pagenation from "./components/Pagination/Pagenation";
 import axios from "axios";
+import Favourite from "./components/Favourite/Favourite";
+import MoviePage from "./components/MoviePage/MoviePage";
 import { API_KEY, API_URL, IMAGE_URL } from "./API/secret.js";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {Link} from 'react-router';
 
 class App extends Component {
   state = {
@@ -104,25 +109,42 @@ class App extends Component {
   render() {
     //return <div className="App">Hello From App</div>;
     return (
+
+      <Router>
       <div className="App">
-        <Header  setMovies ={this.setMovies}></Header>
-        <Movies movies={this.state.moviesData}></Movies>
-        {this.state.moviesData.length ? (
-                <React.Fragment>
-                  <Movies movies={this.state.moviesData}></Movies>
-                  <Pagenation
-                    pages={this.state.pages}
-                    currPage={this.state.currPage}
-                    nextPage={this.nextPage}
-                    previousPage={this.previousPage}
-                    setPage={this.setPage}
-                  ></Pagenation>
-                </React.Fragment>
-              ) : (
-                <h1>Oops No Movies Found !</h1>
-              )}
-     
-      </div>
+        <Header setMovies={this.setMovies}></Header>
+
+        <Switch>
+          <Route path="/" exact>
+            {this.state.moviesData.length ? (
+              <React.Fragment>
+                <Movies movies={this.state.moviesData}></Movies>
+                <Pagenation
+                  pages={this.state.pages}
+                  currPage={this.state.currPage}
+                  nextPage={this.nextPage}
+                  previousPage={this.previousPage}
+                  setPage={this.setPage}
+                ></Pagenation>
+              </React.Fragment>
+            ) : (
+              <h1>Oops No Movies Found !</h1>
+            )}
+          </Route>
+
+          <Route path="/fav" exact>
+            <Favourite></Favourite>
+          </Route>
+          <Route path="/moviepage" exact component={MoviePage}></Route>
+          </Switch>
+        </div>
+      </Router>
+
+
+
+
+
+
     );
   }
 }

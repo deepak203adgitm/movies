@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Header.css";
 class Header extends Component {
   state = {
@@ -35,15 +35,23 @@ class Header extends Component {
               onKeyPress={this.handleKeyPress}
             />
           </div>
-        {/* <div className="header-links">
-          <div className="header-link">
-            <Link to="/">Home</Link>
-          </div>
+         <div className="header-links">
+         <div className="header-links">
+         <Link to ="/"> HOME
+         </Link>
 
-          <div className="header-link">
-            <Link to="/more">More</Link>
-          </div>
-        </div> */}
+         </div>
+
+
+         <div className="header-links">
+         <Link to ="/fav"> favourite
+         </Link>
+
+         </div>
+
+         
+         </div>
+
       </div>
     );
   }
