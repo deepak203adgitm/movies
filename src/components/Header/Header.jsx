@@ -20,14 +20,17 @@ class Header extends Component {
   };
 
   render() {
+
     return (
       <div className="header">
         <div className="logo">
           <img src="logo.gif" alt="" />
         </div>
+        
           <div className="search-btn">
+          <i class="fas fa-search" aria-hidden="true"></i>
             <input
-              className="search-movies"
+              className="search-movies" className="form-control form-control-sm ml-3 w-75"
               value={this.state.newMovieName}
               type="text"
               placeholder="Search"
@@ -35,6 +38,7 @@ class Header extends Component {
               onKeyPress={this.handleKeyPress}
             />
           </div>
+         
          <div className="header-links">
          <div className="header-links">
          <Link to ="/"> HOME

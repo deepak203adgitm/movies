@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 import "./movie.css";
 import axios from "axios";
 class Movie extends Component {
-  state = {};
   state = {
     detailedMovieObj: {},
   };
 
-  componentDidMount() {}
   async componentDidMount() {
     // https://api.themoviedb.org/3/movie/299534?api_key=bdd243ea847239dc0799805e63e189f0
     let response = await axios.get(
@@ -24,7 +22,8 @@ class Movie extends Component {
     });
   }
 
-
+  // let something = { a:"123" , b:"1231" , c:"1241" };
+  //  {...something} => {a:"123" , c:"1241"  , b:"asfasf" };
 
   render() {
     let { poster_path, title, vote_average } = this.props.movie;
@@ -32,9 +31,7 @@ class Movie extends Component {
     return (
       <div className="movie-item">
         <div className="movie-poster">
-       <Link
-            to={{ pathname: "/moviepage", state: this.state.detailedMovieObj }}
-          >
+          <Link to={{ pathname: "/moviepage", state: this.state.detailedMovieObj }}>
             <img src={posterPath} alt="" />
           </Link>
         </div>
