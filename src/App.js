@@ -16,6 +16,7 @@ class App extends Component {
     currentMovie: "avengers",
     pages: [],
     currPage: 1,
+    likes:{},
   };
 
   async componentDidMount() {
@@ -28,6 +29,7 @@ class App extends Component {
     });
     console.log(data);
     let moviesData = data.data.results.slice(0, 10);
+   
     let pagesCount = data.data.total_pages; //3
     console.log(moviesData);
     let pages = [];
@@ -45,6 +47,7 @@ class App extends Component {
       params: { api_key: API_KEY, page: 1, query: newMovieName },
     });
     let moviesData = data.data.results.slice(0, 10);
+   
     let pagesCount = data.data.total_pages; //3
     let pages = [];
     for (let i = 1; i <= pagesCount; i++) {
@@ -57,6 +60,23 @@ class App extends Component {
     });
   };
 
+
+  likeMovies = async (obj) => {
+   let a =[];
+   a =[...this.state.likes,obj];
+ 
+   
+    
+    
+    this.setState({
+     likes :a,
+    });
+  };
+
+
+
+
+
   nextPage = async () => {
     let data = await axios.get(API_URL + "/search/movie", {
       params: {
@@ -67,6 +87,7 @@ class App extends Component {
     });
     console.log(data);
     let moviesData = data.data.results.slice(0, 10);
+   
     this.setState({
       moviesData: moviesData,
       currPage: this.state.currPage + 1,
@@ -83,6 +104,8 @@ class App extends Component {
     });
     console.log(data);
     let moviesData = data.data.results.slice(0, 10);
+    for(let i =0;i<moviesData.length;i++)
+   
     this.setState({
       moviesData: moviesData,
       currPage: this.state.currPage - 1,
@@ -125,6 +148,7 @@ class App extends Component {
                   nextPage={this.nextPage}
                   previousPage={this.previousPage}
                   setPage={this.setPage}
+                  likes ={this.state.likes}
                 ></Pagenation>
               </React.Fragment>
             ) : (
@@ -133,7 +157,7 @@ class App extends Component {
           </Route>
 
           <Route path="/fav" exact>
-            <Favourite></Favourite>
+            <Favourite  likes ={this.state.likeMovies}></Favourite>
           </Route>
           <Route path="/moviepage" exact component={MoviePage}></Route>
           </Switch>
